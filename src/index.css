@@ -11,6 +11,11 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  -webkit-user-select: none; /* chrome, safari, opera */
+  -moz-user-select: none;    /* firefox */
+  -ms-user-select: none;     /* IE 10+, edge */
+  user-select: none;         /* Standard */
 }
 
 a {

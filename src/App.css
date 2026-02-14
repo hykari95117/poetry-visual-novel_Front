@@ -22,6 +22,7 @@
   margin: 0;
   /* text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.5); */
   animation: fadeIn 3s ease-in;
+  cursor: default;
 }
 
 @keyframes fadeIn {
@@ -56,6 +57,7 @@
   width: 40rem;
   height: 5rem;
   animation: fadeIn 3s ease-in;
+  cursor: default;
 }
 
 .select-box:hover {
