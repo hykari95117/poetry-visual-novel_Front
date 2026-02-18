@@ -3,40 +3,45 @@ import PlaySong from './PlaySong'
 import '../styles/GamePage.css'
 import useSoundEffect from '../hooks/useSoundEffect'
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
+/**
+ * Types
+ */
+// GameScene에 사용되는 props 중 dialogues(대화 및 지문)의 타입
 export interface DialogueLine {
     character?: string
     text: string
     characterImage?: string
 }
-
+// GameScene 컴포넌트의 props
 interface GameSceneProps {
-    dialogues: DialogueLine[]
-    backgroundUrl: string
-    bgm: string
-    onComplete: () => void
+    dialogues: DialogueLine[]   // 대화(대화 및 지문)
+    backgroundUrl: string       // 배경 이미지
+    bgm: string                 // 브금
+    onComplete: () => void      // 해당 Scene 종료 시 실행될 함수
 }
 
-// ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
-
+/**
+ * Constants
+ */
+// 텍스트 타이핑 속도
 const TYPEWRITER_SPEED_MS = 45
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
-
+/**
+ * Component
+ */
 const GameScene = ({ dialogues, backgroundUrl, bgm, onComplete }: GameSceneProps) => {
+    // 현재 표시 중인 대사의 인덱스
     const [dialogueIndex, setDialogueIndex] = useState(0)
+    // 타이핑 효과로 화면에 출력된 텍스트 (한 글자씩 누적)
     const [displayedText, setDisplayedText] = useState('')
+    // 타이핑 애니메이션 진행 중 여부
     const [isTyping, setIsTyping] = useState(false)
+    // 캐릭터 이미지 페이드인 완료 여부
     const [isCharacterVisible, setIsCharacterVisible] = useState(false)
+    // 모든 대사를 끝까지 진행했는지 여부
     const [hasFinishedAll, setHasFinishedAll] = useState(false)
 
+    // 타이핑 효과 setInterval ID (클리어용)
     const typewriterRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
     const currentLine = dialogues[dialogueIndex]
@@ -136,7 +141,7 @@ const GameScene = ({ dialogues, backgroundUrl, bgm, onComplete }: GameSceneProps
         return undefined
     })()
 
-    // -- Sound --------------------------------------------------------------
+    // -- Save --------------------------------------------------------------
     const playHoverSound = useSoundEffect('/music/effect/save.wav');
     const clickSave = () => {
         console.log(`saved`)
@@ -145,9 +150,12 @@ const GameScene = ({ dialogues, backgroundUrl, bgm, onComplete }: GameSceneProps
 
     // -- Render --------------------------------------------------------------
     return (
+        // 전체 씬 컨테이너 (클릭 시 대사 진행)
         <div className="scene-container" onClick={advanceDialogue}>
+            {/* BGM 재생 */}
             <PlaySong src={bgm} loop={true} fadeIn={5000} />
 
+            {/* 저장 아이콘 (우측 상단) */}
             <img
                 src="/image/img_assets/save.png"
                 alt="저장"
@@ -158,13 +166,16 @@ const GameScene = ({ dialogues, backgroundUrl, bgm, onComplete }: GameSceneProps
                 }}
             />
 
+            {/* 배경 이미지 (전체 화면) */}
             <div
                 className="scene-background"
                 style={{ backgroundImage: `url(${backgroundUrl})` }}
             />
 
+            {/* 하단 콘텐츠 영역 (캐릭터 + 대화상자) */}
             <div className="scene-content-wrapper">
                 <div className="scene-content">
+                    {/* 캐릭터 이미지 (대화창 좌측 상단에 겹쳐 배치) */}
                     {visibleCharacterImage && (
                         <img
                             src={visibleCharacterImage}
@@ -175,20 +186,25 @@ const GameScene = ({ dialogues, backgroundUrl, bgm, onComplete }: GameSceneProps
                             }
                         />
                     )}
+                    {/* 대화상자 */}
                     <div className="scene-chat">
+                        {/* 캐릭터 이름 태그 (우측 상단) */}
                         {currentLine.character && (
                             <div className="scene-name">{currentLine.character}</div>
                         )}
 
+                        {/* 대사 텍스트 + 타이핑 커서 */}
                         <span>
                             {displayedText}
                             {isTyping && <span className="scene-typewriter-cursor">|</span>}
                         </span>
 
+                        {/* 다음 대사 진행 표시 (▼) */}
                         {!isTyping && !hasFinishedAll && (
                             <span className="scene-click-indicator">▼</span>
                         )}
 
+                        {/* 모든 대사 완료 후 씬 전환 버튼 */}
                         {hasFinishedAll && (
                             <span
                                 className="scene-click-indicator"
